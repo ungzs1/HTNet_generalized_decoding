@@ -47,8 +47,8 @@ def plot_model_accs(root_path, dataset, nb_classes=2, compare_models=True,
         compare_models : if True, plot across different models; if False, plot across different HilbertNet measures
     """
     
-#     root_path = '/data2/users/stepeter/cnn_hilb_datasets/'
-#     dataset = 'naturalistic_v3'
+    #     root_path = '/data2/users/stepeter/cnn_hilb_datasets/'
+    #     dataset = 'naturalistic_v3'
     replace_str = '___'
     suffix_lp = '/'+replace_str+'/' # single_sbjs, combined_sbjs
 
@@ -234,48 +234,48 @@ def plot_model_accs(root_path, dataset, nb_classes=2, compare_models=True,
         ax[0,ii].tick_params(axis='x', pad=0)
         ax[0,ii].set_title(cond_lets[ii],fontsize=10,x=0,fontweight='bold',pad=title_pads[ii],color='dimgray')
         ax[0,ii].text((len(lp)/2)-.5,title_y[ii],conds[ii],fontsize=10,ha='center',fontweight='bold')
-#         # Add stats (manually created)
-#         star_fontsize = 18
-#         if (ii==0) & compare_models:
-#             y_start,h,w_x = 1.02,.04,1
-#             ax[0,ii].plot([0, 0, 2, 2, 2-w_x, 2+w_x],
-#                           [y_start, y_start+h, y_start+h, y_start, y_start, y_start],
-#                           lw=1.5, c='k')
-#             if use_asterisks:
-#                 ax[0,ii].text(1,1.04,'*',fontsize=star_fontsize,fontweight='bold',ha='center')
-#             else:
-#                 ax[0,ii].text(1,1.09,r'$p<0.05$',fontsize=7,fontweight='normal',ha='center')
-#         elif (ii==1) & compare_models:
-#             y_start,h1,h2,w_x = .95,.06,.06,1
-#             ax[0,ii].plot([0, 0, 2, 2, 2-w_x, 2+w_x],
-#                           [y_start, y_start+h1, y_start+h1, y_start-h2, y_start-h2, y_start-h2],
-#                           lw=1.5, c='k')
-#             if use_asterisks:
-#                 ax[0,ii].text(1,.99,'*',fontsize=star_fontsize,fontweight='bold',ha='center')
-#             else:
-#                 ax[0,ii].text(1,1.05,r'$p<0.05$',fontsize=7,fontweight='normal',ha='center')
-#         elif (ii==2) & compare_models:
-#             y_start,h1,h2,w_x = .8,.06,.1,1
-#             ax[0,ii].plot([0, 0, 2, 2, 2-w_x, 2+w_x],
-#                           [y_start, y_start+h1, y_start+h1, y_start-h2, y_start-h2, y_start-h2],
-#                           lw=1.5, c='k')
-#             if use_asterisks:
-#                 ax[0,ii].text(1,.85,'***',fontsize=star_fontsize,fontweight='bold',ha='center')
-#             else:
-#                 ax[0,ii].text(1,.9,r'$p<0.001$',fontsize=7,fontweight='normal',ha='center')
-#         if (ii==0) & (not compare_models):
-#             ax[0,ii].text(2,.82,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
-#             ax[0,ii].text(3,.97,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
-#         elif (ii==1) & (not compare_models):
-#             y_start,h = .92,.06
-#             ax[0,ii].plot([2, 2, 4, 4],
-#                           [y_start, y_start+h, y_start+h, y_start],
-#                           lw=1.5, c='k')
-#             ax[0,ii].text(3,.97,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
-#         elif (ii==2) & (not compare_models):
-#             ax[0,ii].text(1,.55,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
-#             ax[0,ii].text(2,.8,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
-#             ax[0,ii].text(3,.65,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
+    #         # Add stats (manually created)
+    #         star_fontsize = 18
+    #         if (ii==0) & compare_models:
+    #             y_start,h,w_x = 1.02,.04,1
+    #             ax[0,ii].plot([0, 0, 2, 2, 2-w_x, 2+w_x],
+    #                           [y_start, y_start+h, y_start+h, y_start, y_start, y_start],
+    #                           lw=1.5, c='k')
+    #             if use_asterisks:
+    #                 ax[0,ii].text(1,1.04,'*',fontsize=star_fontsize,fontweight='bold',ha='center')
+    #             else:
+    #                 ax[0,ii].text(1,1.09,r'$p<0.05$',fontsize=7,fontweight='normal',ha='center')
+    #         elif (ii==1) & compare_models:
+    #             y_start,h1,h2,w_x = .95,.06,.06,1
+    #             ax[0,ii].plot([0, 0, 2, 2, 2-w_x, 2+w_x],
+    #                           [y_start, y_start+h1, y_start+h1, y_start-h2, y_start-h2, y_start-h2],
+    #                           lw=1.5, c='k')
+    #             if use_asterisks:
+    #                 ax[0,ii].text(1,.99,'*',fontsize=star_fontsize,fontweight='bold',ha='center')
+    #             else:
+    #                 ax[0,ii].text(1,1.05,r'$p<0.05$',fontsize=7,fontweight='normal',ha='center')
+    #         elif (ii==2) & compare_models:
+    #             y_start,h1,h2,w_x = .8,.06,.1,1
+    #             ax[0,ii].plot([0, 0, 2, 2, 2-w_x, 2+w_x],
+    #                           [y_start, y_start+h1, y_start+h1, y_start-h2, y_start-h2, y_start-h2],
+    #                           lw=1.5, c='k')
+    #             if use_asterisks:
+    #                 ax[0,ii].text(1,.85,'***',fontsize=star_fontsize,fontweight='bold',ha='center')
+    #             else:
+    #                 ax[0,ii].text(1,.9,r'$p<0.001$',fontsize=7,fontweight='normal',ha='center')
+    #         if (ii==0) & (not compare_models):
+    #             ax[0,ii].text(2,.82,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
+    #             ax[0,ii].text(3,.97,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
+    #         elif (ii==1) & (not compare_models):
+    #             y_start,h = .92,.06
+    #             ax[0,ii].plot([2, 2, 4, 4],
+    #                           [y_start, y_start+h, y_start+h, y_start],
+    #                           lw=1.5, c='k')
+    #             ax[0,ii].text(3,.97,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
+    #         elif (ii==2) & (not compare_models):
+    #             ax[0,ii].text(1,.55,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
+    #             ax[0,ii].text(2,.8,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
+    #             ax[0,ii].text(3,.65,'**',fontsize=star_fontsize,fontweight='bold',ha='center')
 
         ## Subject-by-subject lineplots (bottom row)
         col_labels_plt = df_sbj['Models'].unique().tolist().copy()
@@ -1006,7 +1006,7 @@ def plot_fine_tuning(root_path, model = 'eegnet_hilb',dpi_plt = 300):
     Plot fine-tuning results for same and unseen modality conditions.
     """
     single_sbj_folder = 'tf_sep_per/' 
-#     model_used = 'eegnet_hilb'
+    #     model_used = 'eegnet_hilb'
     tf_folders = ['tf_per_1dconv/', 'tf_depth_per/', 'tf_sep_per/', 'tf_all_per/'] # folders to view transfer learning results from
     spec_meas = ['power', 'relative_power']
     used_per_vals = True #if True, used percentage values (otherwise, used number of trials)
@@ -1061,7 +1061,7 @@ def plot_fine_tuning(root_path, model = 'eegnet_hilb',dpi_plt = 300):
         n_test = params_dict['n_test']
         n_train = params_dict['n_train'] 
     #     Set this to 1 so that we know default was used and np arrays will be correct dimensions
-#         n_train = 1
+    #         n_train = 1
         
         if i == 'ecog':
             n_sbjs = len(pats_ids_in)
@@ -1089,7 +1089,7 @@ def plot_fine_tuning(root_path, model = 'eegnet_hilb',dpi_plt = 300):
             n_sbjs = 15
             n_folds = 36
             #     Set this to 1 so that we know default was used and np arrays will be correct dimensions
-#             n_train = 1
+    #             n_train = 1
             patIDs_sm = []
             for j in range(n_sbjs):
                 patIDs_sm.append('EE' + str(j + 1).zfill(2))
@@ -1129,7 +1129,7 @@ def plot_fine_tuning(root_path, model = 'eegnet_hilb',dpi_plt = 300):
                     # Transfer data from files to nparray
                     tmp_vals = np.load(fname_curr[0])
                     accs_all_pretrain[...,j,k] = tmp_vals
-#                     accs_all_pretrain.append(tmp_vals)
+    #                     accs_all_pretrain.append(tmp_vals)
 
 
                     # transfer learn accuracies
@@ -1144,7 +1144,7 @@ def plot_fine_tuning(root_path, model = 'eegnet_hilb',dpi_plt = 300):
                     # Transfer data from files to nparray
                     tmp_vals = np.load(fname_curr[0])
                     accs_all_trained[...,j,k] = tmp_vals
-#                     accs_all_trained.append(tmp_vals)
+    #                     accs_all_trained.append(tmp_vals)
         elif i == 'eeg':
             accs_all_pretrain = np.zeros([n_folds,len(patIDs_sm),len(acc_types),len(n_val_trials),len(tf_folders)])
             accs_all_trained = accs_all_pretrain.copy()
@@ -1299,7 +1299,7 @@ def plot_fine_tuning(root_path, model = 'eegnet_hilb',dpi_plt = 300):
                 zeros = np.append(zeros, empty_model)
                 zeros = zeros.reshape((1,6))
                 all_models_test_acc_data_amts = np.append(all_models_test_acc_data_amts, zeros, axis = 0)
-#                 break
+    #                 break
 
         # Now finally make this a dataframe!
         avg_test_acc_df = pd.DataFrame.from_records(all_models_test_acc_data_amts, columns=['Test Acc', 'Train Data Percent', 'Train Data Amt', 'Num Pretrain Sbjs', 'Subject', 'Model Type'])

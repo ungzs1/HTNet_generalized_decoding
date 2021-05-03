@@ -43,13 +43,13 @@ def hilbert_tf(x):
     """
     if x.dtype.is_complex:
         raise ValueError("x must be real.")
-#     if N is None:
+    #     if N is None:
     if tf.__version__[0]=='1':
         N = x.get_shape()[-1].value
     else:
         N = x.get_shape()[-1]
-#     if N <= 0:
-#         raise ValueError("N must be positive.")
+    #     if N <= 0:
+    #         raise ValueError("N must be positive.")
     
     if tf.__version__[0]=='1':
         Xf = tf.spectral.fft(tf.cast(x,dtype=tf.complex64))
@@ -93,10 +93,10 @@ def apply_hilbert_tf(x, envelope=False, do_log=False, compute_val='power', data_
     out : array, shape (n_times)
         The hilbert transform of the signal, or the envelope.
     """
-#     #Filter data to limit temporal filtering to specific frequencies
-#     x = tf.numpy_function(filter_data,[x, 250, 50, 100], Tout=tf.float32)
-    
-#     from scipy.signal import hilbert
+    #     #Filter data to limit temporal filtering to specific frequencies
+    #     x = tf.numpy_function(filter_data,[x, 250, 50, 100], Tout=tf.float32)
+        
+    #     from scipy.signal import hilbert
     if tf.__version__[0]=='1':
         n_x = x.get_shape()[-1].value
     else:
@@ -110,17 +110,17 @@ def apply_hilbert_tf(x, envelope=False, do_log=False, compute_val='power', data_
             out = tf.math.log1p(out)
     elif compute_val=='phase':
         out = unwrap(angle_custom(hilb_sig)) #tf.math.cos(angle_custom(hilb_sig)) # angle_custom(hilb_sig)
-#         tf.print(tf.math.reduce_mean(out))
+    #         tf.print(tf.math.reduce_mean(out))
     elif compute_val=='freqslide':
         ang = angle_custom(hilb_sig) #tf.math.angle(hilb_sig)
         ang = data_srate*diff(unwrap(ang))/(2*np.pi)
         paddings = tf.constant([[0, 0], [0, 0], [0, 0], [0, 1]])
         out = tf.pad(ang, paddings, "CONSTANT") # pad time dimension because of difference function
         # TO DO: apply median filter (use tfa.image.median_filter2d)
-#     elif envelope:
-#         out = tf.math.abs(hilb_sig)
-#         if do_log:
-#             out = tf.math.log1p(out)
+    #     elif envelope:
+    #         out = tf.math.abs(hilb_sig)
+    #         if do_log:
+    #             out = tf.math.log1p(out)
     return out
 
 def angle_custom(X, epsilon=1.0e-12):
@@ -143,7 +143,7 @@ def angle_custom(X, epsilon=1.0e-12):
     angle = tf.where(tf.logical_and(tf.equal(zreal,0.0), tf.equal(zimag,0.0)), tf.zeros_like(zreal), angle)
     return angle
 
-def unwrap(p, discont=np.pi, axis=-1):
+def unwrap(p, discont=np.pi, axis=-1):  
     """Unwrap a cyclical phase tensor. (Author: Mageneta group)
     Args:
     p: Phase tensor.
@@ -162,15 +162,15 @@ def unwrap(p, discont=np.pi, axis=-1):
     ph_cumsum = tf.cumsum(ph_correct, axis=axis)
 
     shape = p.get_shape().as_list()
-#     if shape[0] is None:
-#         shape[0] = 1 # take care of initialization issue (SP 5/6/20)
+    #     if shape[0] is None:
+    #         shape[0] = 1 # take care of initialization issue (SP 5/6/20)
     shape[axis] = 1
     zeros_mat = tf.zeros_like(p, dtype=p.dtype)
     if shape[0] is None:
         ph_cumsum = tf.concat([zeros_mat[:,:shape[1],:shape[2],:shape[3]], ph_cumsum], axis=axis)
     else:
         ph_cumsum = tf.concat([zeros_mat[:shape[0],:shape[1],:shape[2],:shape[3]], ph_cumsum], axis=axis)
-#     ph_cumsum = tf.concat([tf.zeros(shape, dtype=p.dtype), ph_cumsum], axis=axis)
+    #     ph_cumsum = tf.concat([tf.zeros(shape, dtype=p.dtype), ph_cumsum], axis=axis)
     unwrapped = p + ph_cumsum
     return unwrapped
 
@@ -195,8 +195,8 @@ def diff(x, axis=-1):
 
     size = shape.as_list()
     size[axis] -= 1
-#     if size[0] is None:
-#         size[0] = 1 # take care of initialization issue (SP 5/6/20)
+    #     if size[0] is None:
+    #         size[0] = 1 # take care of initialization issue (SP 5/6/20)
     slice_front = x[:,:,:,1:] #tf.slice(x, begin_front, size)
     slice_back = x[:,:,:,:-1] #tf.slice(x, begin_back, size)
     d = slice_front - slice_back
@@ -512,7 +512,7 @@ def get_custom_motor_rois(regions=['precentral','postcentral','parietal_inf']):
     postcentral_inds = [val-1 for val in postcentral_inds]
     parietal_inf_inds = [val-1 for val in parietal_inf_inds]
     
-#     custom_roi_inds = np.union1d(np.union1d(precentral_inds,postcentral_inds),parietal_inf_inds) #select for sensorimotor ROIs
+    #     custom_roi_inds = np.union1d(np.union1d(precentral_inds,postcentral_inds),parietal_inf_inds) #select for sensorimotor ROIs
     custom_roi_inds = []
     for val in regions:
         eval('custom_roi_inds.extend('+val+'_inds)')
