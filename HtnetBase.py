@@ -69,16 +69,16 @@ class HtnetBase:
         self.trim_n_chans = True
 
         # HTnet parameters
-        self.nROIs = 100
-        self.proj_mat_out = None
-        self.sbj_order_train = None
-        self.sbj_order_validate = None
-        self.sbj_order_test = None
+        self.nROIs = 100  # not yet used
+        self.proj_mat_out = None  # not yet used
+        self.sbj_order_train = None  # not yet used
+        self.sbj_order_validate = None  # not yet used
+        self.sbj_order_test = None  # not yet used
 
     def set_tailored_hyperparameters(self):
         raise NotImplementedError
 
-    def load_data(self, patient):
+    def load_data(self, patient, randomize_events=True):
         raise NotImplementedError
 
     def rf_model(self):
@@ -169,7 +169,7 @@ class HtnetBase:
 
         for pat_id_curr in self.pats_ids_in:
             # Load data
-            X, y, X_test, y_test, sbj_order, sbj_order_test = self.load_data(patient=pat_id_curr)
+            X, y, X_test, y_test = self.load_data(patient=pat_id_curr, randomize_events=True)
             nb_classes = len(np.unique(y))
 
             # Iterate across all model types specified
@@ -213,7 +213,7 @@ class HtnetBase:
                                                                                                   str(frodo),
                                                                                                   self.save_suffix))
 
-                        # rearrange axis to fit on htnet model
+                        # rearrange axis to fit on htnet model, correct form is (trial, channel, timestep, 1)
                         X_train = np.moveaxis(X_train, 1, -1)
                         X_validate = np.moveaxis(X_validate, 1, -1)
                         X_test3 = np.moveaxis(X_test2, 1, -1)
