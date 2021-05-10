@@ -301,7 +301,7 @@ def load_data(pats_ids_in, lp, n_chans_all=64, test_day=None, tlim=[-1,1], event
     #Gather each subjects data, and concatenate all days
     for j in tqdm(range(len(pats_ids_in))):
         pat_curr = pats_ids_in[j]
-        ep_data_in = xr.open_dataset(lp+pat_curr+'_ecog_data.nc')
+        ep_data_in = xr.open_dataset(os.path.join(lp, pat_curr + '_ecog_data.nc'))
         ep_times = np.asarray(ep_data_in.time)
         time_inds = np.nonzero(np.logical_and(ep_times>=tlim[0],ep_times<=tlim[1]))[0]
         n_ecog_chans = (len(ep_data_in.channels)-1)

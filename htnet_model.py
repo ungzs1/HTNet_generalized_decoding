@@ -86,7 +86,7 @@ def htnet(nb_classes, Chans=64, Samples=128,
             X2 = Lambda(lambda x: tf.tile(x[..., :1], tf.constant([1, 1, 1, Samples], dtype=tf.int32)))(X2)
             block1 = Lambda(lambda inputs: inputs[0] - inputs[1])([X1, X2])
         else:
-            block1 = Lambda(apply_hilbert_tf, arguments={'do_log': do_log, 'compute_val': compute_val, \
+            block1 = Lambda(apply_hilbert_tf, arguments={'do_log': do_log, 'compute_val': compute_val,
                                                          'data_srate': data_srate})(block1)
     if projectROIs:
         # Project to common brain regions
