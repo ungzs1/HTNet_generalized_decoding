@@ -8,12 +8,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import utils as np_utils
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
-
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.metrics import accuracy_score
-# from tqdm import tqdm
-
-# import pyriemann
+import matplotlib.pyplot as plt
 
 
 class HtnetBase:
@@ -75,6 +70,52 @@ class HtnetBase:
         self.sbj_order_validate = None  # not yet used
         self.sbj_order_test = None  # not yet used
 
+    def create_plots(self):
+        # %%
+        accs_all = {}
+        for folder in self.spec_meas_tail:
+            lp = os.path.join(self.save_rootpath, 'single_sbjs_'+folder)
+            acc_temp = []
+            for model in self.models:
+                acc_per_model = []
+                for patient in self.pats_ids_in:
+                    fname = 'acc_{}_{}.npy'.format(model, patient)
+                    acc = np.load(os.path.join(lp, fname))
+                    acc_mean_train = np.mean(acc[:, 0])
+                    acc_mean_val = np.mean(acc[:, 1])
+                    acc_mean_test = np.mean(acc[:, 2])
+                    acc_per_model.append([acc_mean_train, acc_mean_val, acc_mean_test])
+                acc_temp.append(acc_per_model)
+            accs_all[folder] = acc_temp
+
+        # create plots
+        fsize = 5
+        fig, ax = plt.subplots(len(self.spec_meas_tail), 3, figsize=(3*fsize, len(self.spec_meas_tail)*fsize),
+                               facecolor='white')
+
+        if len(self.spec_meas_tail) == 1:
+            for j, set in enumerate(['train', 'val', 'test']):
+                ax[j].scatter(self.pats_ids_in, [acc[j] for acc in accs_all[self.spec_meas_tail[0]][0]],
+                              label=self.models[0])
+                ax[j].scatter(self.pats_ids_in, [acc[j] for acc in accs_all[self.spec_meas_tail[0]][1]],
+                              label=self.models[1])
+                ax[j].title.set_text(folder+' / '+set)
+                ax[j].set_ylim([0.3, 1.1])
+                ax[j].legend()
+                ax[j].grid()
+        else:
+            for i, folder in enumerate(self.spec_meas_tail):
+                for j, set in enumerate(['train', 'val', 'test']):
+                    ax[i][j].scatter(self.pats_ids_in, [acc[j] for acc in accs_all[folder][0]], label=self.models[0])
+                    ax[i][j].scatter(self.pats_ids_in, [acc[j] for acc in accs_all[folder][1]], label=self.models[1])
+                    ax[i][j].title.set_text(folder+' / '+set)
+                    ax[i][j].set_ylim([0.3, 1.1])
+                    ax[i][j].legend()
+                    ax[i][j].grid()
+
+        fig.suptitle('HTnet accuracies')
+        plt.savefig(os.path.join(self.save_rootpath, 'accs_plot'), facecolor=fig.get_facecolor())
+
     def set_tailored_hyperparameters(self):
         raise NotImplementedError
 
@@ -87,12 +128,15 @@ class HtnetBase:
     def riemann_model(self):
         raise NotImplementedError
 
-    def cnn_model(self, X_train, y_train, X_validate, y_validate, X_test, y_test, chckpt_path, modeltype, nb_classes):
+    def cnn_model(self, X_train, y_train, X_validate, y_validate, X_test, y_test, chckpt_path, modeltype):
         """
         Perform NN model fitting based on specified prarameters.
         """
         # Logic to determine how to run model
         useHilbert = True if modeltype == 'eegnet_hilb' else False  # True if want to use Hilbert transform layer
+
+        # number of unique classes
+        nb_classes = len(np.unique(y_train, axis=0))
 
         # Load NN model
         model = htnet(nb_classes, Chans=X_train.shape[1], Samples=X_train.shape[2],
@@ -170,7 +214,6 @@ class HtnetBase:
         for pat_id_curr in self.pats_ids_in:
             # Load data
             X, y, X_test, y_test = self.load_data(patient=pat_id_curr, randomize_events=True)
-            nb_classes = len(np.unique(y))
 
             # Iterate across all model types specified
             for modeltype in self.models:
@@ -222,8 +265,7 @@ class HtnetBase:
                         accs_lst, last_epoch_tmp = self.cnn_model(X_train=X_train, y_train=Y_train,
                                                                   X_validate=X_validate, y_validate=Y_validate,
                                                                   X_test=X_test3, y_test=y_test2,
-                                                                  chckpt_path=chckpt_path, modeltype=modeltype,
-                                                                  nb_classes=nb_classes)
+                                                                  chckpt_path=chckpt_path, modeltype=modeltype)
 
                         # save accuracies in variable, 0:train, 1:validate, 2:test
                         for ss in range(3):
@@ -248,7 +290,7 @@ class HtnetBase:
         os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
         os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # specify GPU to use
 
-        # t_start = time.time()
+        t_start = time.time()
 
         # *** Tailored decoder training ***
         # call subcalss function to set tailored decoder hyperparameters as class variables
@@ -267,3 +309,8 @@ class HtnetBase:
                     self.models = ['eegnet_hilb']
 
             self.run_nn_models()
+
+        print('Elapsed time: ' + str(time.time() - t_start))
+
+        # create plots
+        self.create_plots()
